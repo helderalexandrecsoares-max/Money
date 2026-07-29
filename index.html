@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SITREP — Briefing de Mercado</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0C0A08">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SITREP">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0C0A08;
+    --surface:#181209;
+    --surface-2:#211809;
+    --line:#3a2e1a;
+    --text:#F5EFE6;
+    --muted:#8a7d68;
+    --amber:#FFB000;
+    --amber-dim:#8a5f00;
+    --teal:#5EEAD4;
+    --danger:#ff6b5e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans',sans-serif;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,176,0,0.015) 0px, rgba(255,176,0,0.015) 1px, transparent 1px, transparent 3px);
+    min-height:100vh;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+
+  /* header */
+  .head{
+    border:1px solid var(--line);
+    background:var(--surface);
+    padding:20px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .head::before{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,176,0,0.08), transparent);
+    animation:sweep 5s linear infinite;
+  }
+  @keyframes sweep{ from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.15em;
+    color:var(--amber);
+    display:flex; justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .cursor{display:inline-block;width:7px;height:12px;background:var(--amber);animation:blink 1s step-start infinite;vertical-align:-2px;}
+  @keyframes blink{50%{opacity:0}}
+  h1{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:26px;
+    margin:0 0 6px;
+    letter-spacing:.02em;
+  }
+  .sub{color:var(--muted);font-size:14px;line-height:1.5;max-width:60ch;}
+
+  .toolbar{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  button{
+    font-family:'IBM Plex Mono',monospace;
+    background:transparent;
+    border:1px solid var(--amber-dim);
+    color:var(--amber);
+    padding:9px 16px;
+    font-size:12.5px;
+    letter-spacing:.08em;
+    cursor:pointer;
+    transition:.15s;
+  }
+  button:hover{background:rgba(255,176,0,0.1); border-color:var(--amber);}
+  button:disabled{opacity:.4;cursor:default;}
+  button.ghost{border-color:var(--line); color:var(--muted);}
+  button.ghost:hover{border-color:var(--muted); background:transparent;}
+
+  /* grid */
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:22px;}
+  @media (max-width:720px){.grid{grid-template-columns:1fr;}}
+
+  .card{border:1px solid var(--line); background:var(--surface); display:flex; flex-direction:column; min-height:180px;}
+  .card-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px 14px; border-bottom:1px solid var(--line);
+  }
+  .card-title{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase;}
+  .card-body{padding:12px 14px; display:flex; flex-direction:column; gap:12px; flex:1;}
+
+  .empty{color:var(--muted); font-size:13px; margin:auto; text-align:center; padding:20px 0;}
+  .empty small{display:block; margin-top:6px; font-family:'IBM Plex Mono',monospace; font-size:11px;}
+
+  .scan{display:flex; align-items:center; gap:10px; color:var(--amber); font-family:'IBM Plex Mono',monospace; font-size:12px; margin:auto; padding:20px 0;}
+  .dot{width:6px;height:6px;background:var(--amber);border-radius:50%;animation:pulse 1s ease-in-out infinite;}
+  .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
+  @keyframes pulse{0%,100%{opacity:.2} 50%{opacity:1}}
+
+  .item{border-left:2px solid var(--amber-dim); padding-left:10px;}
+  .item-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .item-title{font-weight:600; font-size:14px; line-height:1.3;}
+  .bars{display:flex; gap:2px; flex-shrink:0; margin-top:3px;}
+  .bar{width:4px;height:9px;background:var(--line);}
+  .bar.on{background:var(--teal);}
+  .item-desc{font-size:13px; color:#cfc6b8; line-height:1.5; margin:5px 0;}
+  .item-tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.08em;
+    color:var(--teal); border:1px solid rgba(94,234,212,.3); padding:1px 6px; margin-bottom:4px;
+  }
+  .item-src{font-size:11px;}
+  .item-src a{color:var(--muted); text-decoration:none; border-bottom:1px dotted var(--muted);}
+  .item-src a:hover{color:var(--amber); border-color:var(--amber);}
+
+  .err{color:var(--danger); font-size:12px; font-family:'IBM Plex Mono',monospace; margin:auto; padding:16px; text-align:center;}
+
+  .foot{margin-top:22px; font-size:11.5px; color:var(--muted); line-height:1.6; border-top:1px dashed var(--line); padding-top:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="eyebrow">
+      <span>SITREP // MARKET SCAN<span class="cursor"></span></span>
+      <span id="clock"></span>
+    </div>
+    <h1>Briefing de Mercado Global</h1>
+    <div class="sub">Análise de fontes online sobre produtos em alta, ideias de negócio ainda ausentes em Portugal, e tendências de venda nas capitais europeias. Gerado a pedido, não é aconselhamento financeiro.</div>
+    <div class="toolbar">
+      <button id="runAll">▶ GERAR BRIEFING COMPLETO</button>
+      <button class="ghost" id="clearAll">LIMPAR</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="foot">
+    Cada secção corre uma pesquisa independente na web no momento em que é gerada. Os sinais (▮▮▮▯▯) refletem uma estimativa de oportunidade/urgência dada pela análise, não uma garantia de retorno. Confirma sempre fontes antes de investir dinheiro real.
+  </div>
+</div>
+
+<script>
+const CATEGORIES = [
+  {
+    id: 'products',
+    label: 'Produtos virais / emergentes',
+    prompt: `Pesquisa na web informação atual (2026) sobre produtos físicos de consumo que estão a viralizar ou a crescer rapidamente em vendas globalmente agora, com potencial para revenda por um pequeno negócio online. Devolve APENAS um array JSON, sem texto antes ou depois, sem markdown, no formato:
+[{"title":"nome do produto/categoria","description":"1-2 frases explicando porque está em alta e o potencial de margem","tag":"VIRAL ou EMERGENTE ou SAZONAL","score":1-5,"source_name":"nome da fonte","source_url":"url real"}]
+Devolve 3 a 4 itens, os mais atuais e específicos possível.`
+  },
+  {
+    id: 'ideas',
+    label: 'Negócios que faltam em Portugal',
+    prompt: `Pesquisa na web sobre modelos de negócio, serviços ou conceitos de retalho/e-commerce que já são populares noutros países (EUA, Ásia, ou outros países europeus) em 2025/2026 mas que ainda não existem ou são raros em Portugal. Devolve APENAS um array JSON, sem texto antes ou depois, sem markdown:
+[{"title":"nome do conceito","description":"1-2 frases: o que é e porque poderia funcionar em Portugal","tag":"POR EXPLORAR ou NICHO","score":1-5,"source_name":"nome da fonte","source_url":"url real"}]
+Devolve 3 a 4 itens.`
+  },
+  {
+    id: 'trends',
+    label: 'Tendências — capitais europeias',
+    prompt: `Pesquisa na web sobre tendências de consumo e vendas retalho em 2026 em capitais europeias (Lisboa, Madrid, Paris, Berlim, Amesterdão, etc). Foca-te em categorias de produto ou hábitos de compra em crescimento. Devolve APENAS um array JSON, sem texto antes ou depois, sem markdown:
+[{"title":"tendência","description":"1-2 frases sobre a tendência e em que cidade(s) é mais forte","tag":"CRESCIMENTO ou DECLÍNIO","score":1-5,"source_name":"nome da fonte","source_url":"url real"}]
+Devolve 3 a 4 itens.`
+  },
+  {
+    id: 'invest',
+    label: 'Sinais comerciais / investimento',
+    prompt: `Pesquisa na web notícias recentes (2026) sobre setores, startups ou categorias de produto a receber investimento significativo, rondas de financiamento, ou crescimento comercial forte, relevante para alguém a decidir onde investir tempo ou dinheiro num pequeno negócio. Devolve APENAS um array JSON, sem texto antes ou depois, sem markdown:
+[{"title":"setor/empresa/movimento","description":"1-2 frases sobre o sinal comercial e porque importa","tag":"FINANCIAMENTO ou CRESCIMENTO","score":1-5,"source_name":"nome da fonte","source_url":"url real"}]
+Devolve 3 a 4 itens.`
+  }
+];
+
+const grid = document.getElementById('grid');
+
+function cardSkeleton(cat){
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.id = 'card-' + cat.id;
+  el.innerHTML = `
+    <div class="card-head">
+      <div class="card-title">${cat.label}</div>
+      <button class="ghost small" onclick="runOne('${cat.id}')">↻</button>
+    </div>
+    <div class="card-body" id="body-${cat.id}">
+      <div class="empty">Sem dados ainda.<small>Carrega em gerar para pesquisar.</small></div>
+    </div>
+  `;
+  return el;
+}
+
+CATEGORIES.forEach(cat => grid.appendChild(cardSkeleton(cat)));
+
+function setLoading(id){
+  document.getElementById('body-' + id).innerHTML = `
+    <div class="scan"><span class="dot">●</span><span class="dot">●</span><span class="dot">●</span>&nbsp;a pesquisar fontes...</div>`;
+}
+
+function setError(id, msg){
+  document.getElementById('body-' + id).innerHTML = `<div class="err">FALHA NO SINAL<br>${msg}</div>`;
+}
+
+function bars(score){
+  let out = '<div class="bars">';
+  for(let i=1;i<=5;i++){ out += `<div class="bar ${i<=score?'on':''}"></div>`; }
+  return out + '</div>';
+}
+
+function renderItems(id, items){
+  const body = document.getElementById('body-' + id);
+  body.innerHTML = '';
+  items.forEach(it => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      <div class="item-top">
+        <div>
+          <span class="item-tag">${(it.tag||'').toUpperCase()}</span>
+          <div class="item-title">${it.title||''}</div>
+        </div>
+        ${bars(it.score||3)}
+      </div>
+      <div class="item-desc">${it.description||''}</div>
+      <div class="item-src">${it.source_url ? `<a href="${it.source_url}" target="_blank">${it.source_name||'fonte'}</a>` : (it.source_name||'')}</div>
+    `;
+    body.appendChild(div);
+  });
+}
+
+async function runOne(id){
+  const cat = CATEGORIES.find(c => c.id === id);
+  setLoading(id);
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: cat.prompt }],
+        tools: [{ type: "web_search_20250305", name: "web_search" }]
+      })
+    });
+    const data = await response.json();
+    const text = (data.content || [])
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
+      .join('\\n')
+      .trim()
+      .replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'')
+      .trim();
+    const items = JSON.parse(text);
+    if(!Array.isArray(items) || items.length === 0) throw new Error('resposta vazia');
+    renderItems(id, items);
+  }catch(e){
+    setError(id, 'Não foi possível interpretar a resposta. Tenta novamente.');
+    console.error(cat.id, e);
+  }
+}
+
+document.getElementById('runAll').addEventListener('click', () => {
+  CATEGORIES.forEach(cat => runOne(cat.id));
+});
+document.getElementById('clearAll').addEventListener('click', () => {
+  CATEGORIES.forEach(cat => {
+    document.getElementById('body-' + cat.id).innerHTML = `<div class="empty">Sem dados ainda.<small>Carrega em gerar para pesquisar.</small></div>`;
+  });
+});
+
+function tick(){
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleString('pt-PT', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+tick(); setInterval(tick, 30000);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW falhou:', err));
+  });
+}
+</script>
+</body>
+</html>
