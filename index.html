@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SITREP">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -89,6 +89,15 @@
   button.ghost:hover{border-color:var(--muted); background:transparent;}
 
   /* grid */
+  .apikey-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  #apiKey{
+    flex:1; min-width:200px;
+    background:var(--surface-2); border:1px solid var(--line); color:var(--text);
+    font-family:'IBM Plex Mono',monospace; font-size:12px; padding:9px 10px;
+  }
+  #apiKey:focus{outline:1px solid var(--amber);}
+  .keynote{font-size:11px; color:var(--muted); margin-top:6px; font-family:'IBM Plex Mono',monospace;}
+
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:22px;}
   @media (max-width:720px){.grid{grid-template-columns:1fr;}}
 
@@ -141,6 +150,10 @@
     <div class="toolbar">
       <button id="runAll">▶ GERAR BRIEFING COMPLETO</button>
       <button class="ghost" id="clearAll">LIMPAR</button>
+    </div>
+    <div class="apikey-row">
+      <input type="password" id="apiKey" placeholder="Cola aqui a tua chave API (sk-ant-...)" autocomplete="off">
+      <button class="ghost" id="saveKey">GUARDAR CHAVE</button>
     </div>
   </div>
 
@@ -241,11 +254,21 @@ function renderItems(id, items){
 
 async function runOne(id){
   const cat = CATEGORIES.find(c => c.id === id);
+  const key = localStorage.getItem('sitrep_key') || '';
+  if(!key){
+    setError(id, 'Falta a chave API. Cola-a no campo acima e carrega em GUARDAR CHAVE.');
+    return;
+  }
   setLoading(id);
   try{
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 1000,
@@ -254,6 +277,7 @@ async function runOne(id){
       })
     });
     const data = await response.json();
+    if(data.error){ throw new Error(data.error.message || 'erro da API'); }
     const text = (data.content || [])
       .filter(b => b.type === 'text')
       .map(b => b.text)
@@ -265,10 +289,23 @@ async function runOne(id){
     if(!Array.isArray(items) || items.length === 0) throw new Error('resposta vazia');
     renderItems(id, items);
   }catch(e){
-    setError(id, 'Não foi possível interpretar a resposta. Tenta novamente.');
+    setError(id, e.message || 'Não foi possível interpretar a resposta. Tenta novamente.');
     console.error(cat.id, e);
   }
 }
+
+document.getElementById('saveKey').addEventListener('click', () => {
+  const val = document.getElementById('apiKey').value.trim();
+  if(val){
+    localStorage.setItem('sitrep_key', val);
+    document.getElementById('saveKey').textContent = 'GUARDADA ✓';
+    setTimeout(() => { document.getElementById('saveKey').textContent = 'GUARDAR CHAVE'; }, 1500);
+  }
+});
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('sitrep_key');
+  if(saved) document.getElementById('apiKey').value = saved;
+});
 
 document.getElementById('runAll').addEventListener('click', () => {
   CATEGORIES.forEach(cat => runOne(cat.id));
