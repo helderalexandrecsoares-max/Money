@@ -1,6 +1,6 @@
 ---
 name: opportunity-scanner
-description: "Scan de mercado para identificar produtos mais vendáveis, nichos de alta margem, e tendências emergentes. Usar quando o utilizador pede análise de oportunidades de negócio, produtos para vender, nichos lucrativos, ou trends de mercado. Invocado com /opportunity-scanner ou pedidos como 'faz um scan de oportunidades', 'que produtos posso vender', 'nichos com margem alta', 'o que está em trend'."
+description: "Scan de mercado para identificar produtos mais vendáveis, nichos de alta margem, tendências emergentes, e onde comprar a preço de fábrica. Usar quando o utilizador pede análise de oportunidades de negócio, produtos para vender, nichos lucrativos, trends de mercado, ou fornecedores/atacado. Invocado com /opportunity-scanner ou pedidos como 'faz um scan de oportunidades', 'que produtos posso vender', 'nichos com margem alta', 'o que está em trend', 'onde comprar barato', 'fornecedores'."
 ---
 
 ## Objetivo
@@ -112,6 +112,33 @@ O HTML deve incluir no `<style>`:
 Se o utilizador tiver a chave API Anthropic disponível (ou perguntar por ela), o artifact pode incluir botões de refresh por secção — cada botão re-corre a pesquisa via API do lado do browser (igual ao SITREP existente). Nesse caso, inclui campo de API key e lógica JavaScript igual à do `index.html` do projeto.
 
 Se não houver chave disponível, gera o relatório completo diretamente no conteúdo estático do artifact.
+
+## Dimensão de sourcing (onde comprar a preço de fábrica)
+
+Sempre que o scan inclui produtos específicos, adicionar para cada produto:
+
+**Plataformas de sourcing a mencionar (por tipo):**
+
+| Plataforma | Tipo | Quando usar |
+|---|---|---|
+| **Alibaba.com** | Fábrica direta, B2B | Volume, preço mais baixo, produto personalizado/white label |
+| **AliExpress** | Sem mínimo de encomenda | Testar produto sem stock, início de negócio |
+| **CJDropshipping** | Fulfillment + armazém EU | Dropshipping sem stock, envio mais rápido |
+| **Zendrop** | Armazém EU/US | Dropshipping premium, entrega 5-10 dias |
+| **Spocket** | Fornecedores EU | Produtos europeus, entrega rápida para PT |
+| **BigBuy** | Atacado Europa | Baseado em Espanha, entrega rápida para Portugal |
+| **Printify / Printful** | Print on demand | Produtos personalizados sem stock (t-shirts, canecas, mouse pads) |
+| **GlobalSources** | Fabricantes verificados | Alternativa ao Alibaba, foco em qualidade |
+
+**Para cada produto específico, indicar:**
+- `onde_comprar`: nome da plataforma recomendada (ex. "AliExpress / CJDropshipping")
+- `url_sourcing`: URL de pesquisa direta (ex. `https://www.aliexpress.com/w/wholesale-gua-sha.html`)
+- `preco_fabrica`: preço estimado de fábrica/atacado (ex. "€0.50–2 /unidade no Alibaba")
+- `minimo_encomenda`: se aplicável (ex. "1 unidade no AliExpress, 50 unidades no Alibaba")
+- `prazo_entrega`: estimativa de entrega para Portugal (ex. "15–30 dias AliExpress, 5–10 dias CJDropshipping EU")
+
+**Dica de sourcing a incluir no relatório:**
+Para testar um produto novo: começar no AliExpress (sem mínimo, mais lento) → validar vendas → passar para CJDropshipping ou Alibaba (mais barato, mais rápido).
 
 ## Regras de qualidade
 
