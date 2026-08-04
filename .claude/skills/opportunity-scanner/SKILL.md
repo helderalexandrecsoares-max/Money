@@ -1,6 +1,6 @@
 ---
 name: opportunity-scanner
-description: "Scan de mercado para identificar produtos mais vendáveis, nichos de alta margem, tendências emergentes, e onde comprar a preço de fábrica. Usar quando o utilizador pede análise de oportunidades de negócio, produtos para vender, nichos lucrativos, trends de mercado, ou fornecedores/atacado. Invocado com /opportunity-scanner ou pedidos como 'faz um scan de oportunidades', 'que produtos posso vender', 'nichos com margem alta', 'o que está em trend', 'onde comprar barato', 'fornecedores'."
+description: "Scan de mercado para identificar produtos mais vendáveis, nichos de alta margem, tendências emergentes, onde comprar a preço de fábrica e onde vender online. Usar quando o utilizador pede análise de oportunidades de negócio, produtos para vender, nichos lucrativos, trends de mercado, fornecedores/atacado, ou plataformas de venda. Invocado com /opportunity-scanner ou pedidos como 'faz um scan de oportunidades', 'que produtos posso vender', 'nichos com margem alta', 'o que está em trend', 'onde comprar barato', 'fornecedores', 'onde vender', 'Amazon', 'Shopify', 'Etsy'."
 ---
 
 ## Objetivo
@@ -139,6 +139,38 @@ Sempre que o scan inclui produtos específicos, adicionar para cada produto:
 
 **Dica de sourcing a incluir no relatório:**
 Para testar um produto novo: começar no AliExpress (sem mínimo, mais lento) → validar vendas → passar para CJDropshipping ou Alibaba (mais barato, mais rápido).
+
+## Dimensão de venda (onde vender online)
+
+Sempre que o scan inclui produtos específicos, adicionar para cada produto a melhor plataforma de venda com dados de comissão reais.
+
+**Plataformas de venda a considerar (por tipo):**
+
+| Plataforma | Tipo | Comissão 2026 | Melhor para |
+|---|---|---|---|
+| **Amazon ES/PT** | Marketplace líder | 5–15% (cat. dependente) | Volume alto, produtos com procura estabelecida, FBA para entrega rápida |
+| **Etsy** | Nicho artesanal/personalizado | 6.5% + €0.20/listagem | Produtos personalizados, handmade, vintage, nichos criativos |
+| **Shopify** | Loja própria (sem marketplace) | 0% comissão (plano €29–79/mês) | Marca própria, controlo total, escalar com publicidade |
+| **TikTok Shop** | Social commerce | 5–8% (cat. dependente) | Produtos virais com apelo visual, demonstração em vídeo |
+| **Instagram Shopping** | Social commerce | ~5% | Lifestyle, beauty, moda, produtos fotogénicos |
+| **Vinted** | Segunda mão moda | 0% para vendedor | Roupas, acessórios segunda mão — comprador paga taxa |
+| **OLX / Custo Justo** | Marketplace PT generalista | Gratuito / baixo | Venda local PT, produtos físicos, segunda mão |
+| **Worten Marketplace** | Eletrónica PT | 10–15% | Tech, gadgets, eletrónica, acessórios carro |
+| **eBay** | Global | 10–12.5% | Nichos, colecionáveis, tech recondicionado |
+| **Mercado Livre** | Brasil | 10–17% | Mercado brasileiro — exige conta local |
+
+**Para cada produto específico, indicar:**
+- `onde_vender`: plataforma(s) recomendada(s) (ex. "Amazon ES + TikTok Shop")
+- `comissao`: percentagem real da plataforma (ex. "8% Amazon")
+- `melhor_estrategia`: 1 frase com tática de venda (ex. "Criar vídeo de demonstração no TikTok → redirecionar para loja Shopify")
+- `dificuldade_entrada`: `FÁCIL` | `MÉDIA` | `DIFÍCIL`
+- `competicao_plataforma`: `BAIXA` | `MÉDIA` | `ALTA`
+
+**Nota sobre preços e verificação:**
+Os preços de fábrica e margens indicados são **estimativas baseadas em pesquisa** — variam com fornecedor, quantidade, câmbio e data. Antes de encomendar, verificar sempre o preço real diretamente na plataforma de sourcing (AliExpress, Alibaba, etc.) porque os preços mudam com frequência e por fornecedor.
+
+**Dica de venda a incluir no relatório:**
+Para testar um produto: vende primeiro no OLX ou Facebook Marketplace (zero custo) → validas procura → abres loja Shopify ou vendes no Amazon para escalar.
 
 ## Regras de qualidade
 
